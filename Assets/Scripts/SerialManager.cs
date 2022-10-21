@@ -30,6 +30,8 @@ public class SerialManager : MonoBehaviour
     {
         get
         {
+            // アクセッサ内でisNewProgressを変更してあげることで
+            // クラスの外部に責任を押し付けなくて済む。
             isNewProgress = false;
             return progress;
         }
