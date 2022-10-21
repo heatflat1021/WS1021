@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField]
     private GameObject sliderObj;
 
+    // Start()とUpdate()の両方に記述がなかったとしても消さない。
+    // 消すとインスペクタでの挙動がおかしくなる
     // Start is called before the first frame update
     void Start()
     {
-        sliderObj = GameObject.Find("Canvas/Panel/Slider");
+        // Findはできるだけ使わない。
+        // sliderObj = GameObject.Find("Canvas/Panel/Slider");
     }
 
     // Update is called once per frame
@@ -22,17 +26,23 @@ public class UIManager : MonoBehaviour
     public void AddProgress(float incremental)
     {
         Slider slider = sliderObj.GetComponent<Slider>();
-        float nextSliderValue = slider.value + incremental;
 
-        if (nextSliderValue > 1)
-        {
-            nextSliderValue = 1;
-        }
-        else if (nextSliderValue < 0)
-        {
-            nextSliderValue = 0;
-        }
+        float nextSliderValue = Clip(slider.value + incremental, 0, 1);
 
         slider.value = nextSliderValue;
+    }
+
+    private float Clip(float value, float min, float max)
+    {
+        float clippedValue = value;
+        if (clippedValue > max)
+        {
+            clippedValue = max;
+        }
+        else if (clippedValue < min)
+        {
+            clippedValue = min;
+        }
+        return clippedValue;
     }
 }

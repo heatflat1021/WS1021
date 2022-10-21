@@ -3,7 +3,10 @@ using System.Collections;
 using System.IO.Ports;
 using System.Threading;
 
-public class SerialManager : SingletonMonoBehaviour<SerialManager>
+// 複数のポートを使いたい場合もあるのでシングルトンである必要はない。
+// それよりすべてのSerialManagerでシリアルポートの指定が被っていないか調べるコードの方がほしい。
+// （そもそももとのやつは呼び出し側の記述が違った。ごめんなさい。）
+public class SerialManager : MonoBehaviour
 {
     public bool isDebugMode;
     public delegate void SerialDataReceivedEventHandler(string message);
@@ -20,14 +23,28 @@ public class SerialManager : SingletonMonoBehaviour<SerialManager>
     private bool isNewMessageReceived_ = false;
 
     private string nextSendMessage = "";
-    public float progress = 0;
-    public bool isNewProgress = false;
+    
+    // 変数はprivateにしてアクセッサを設定する
+    private float progress = 0;
+    public float Progress
+    {
+        get
+        {
+            isNewProgress = false;
+            return progress;
+        }
+    }
+
+    // 変数はprivateにしてアクセッサを設定する
+    private bool isNewProgress = false;
+    public bool IsNewProgress
+    {
+        get { return isNewProgress; }
+    }
     
 
-    override protected void Awake()
+    void Awake()
     {
-        base.Awake();
-
         Open();
     }
 
@@ -106,7 +123,9 @@ public class SerialManager : SingletonMonoBehaviour<SerialManager>
                 isNewProgress = true;
                 nextSendMessage = "";
             }
-        } else {
+        }
+        else
+        {
             while (isRunning_ && serialPort_ != null && serialPort_.IsOpen)
             {
                 try

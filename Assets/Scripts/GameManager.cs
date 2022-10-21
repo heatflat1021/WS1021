@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject serialManagerObj;
-    public GameObject uiManagerObj;
+    // プログラム中の定数は、constかreadonlyで宣言する。
+    private const int SEND_MESSAGE_FRAME = 50;
+
+    // publicより、private [SerializeField] がよい
+    [SerializeField]
+    private GameObject serialManagerObj;
+    [SerializeField]
+    private GameObject uiManagerObj;
 
     private SerialManager serialManager;
     private UIManager uiManager;
 
-    private int frameNum = 0;
+    // ○○Numberという名前は何を指しているか分かりにくい。
+    // amountやcounterなど、より分かりやすい命名がよい。
+    private int frameCounter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -22,17 +30,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (50 < frameNum++) // 50フレームに1回、値を送出する。
+        if (SEND_MESSAGE_FRAME < frameCounter++)
         {
-            string message = UnityEngine.Random.Range(0, 1 + 1) == 0 ? "a" : "b";
+            string message = Messages.GetMessage();
             serialManager.Write(message);
-            frameNum = 0;
+            frameCounter = 0;
         }
 
-        if (serialManager.isNewProgress)
+        if (serialManager.IsNewProgress)
         {
-            uiManager.AddProgress(serialManager.progress);
-            serialManager.isNewProgress = false;
+            uiManager.AddProgress(serialManager.Progress);
         }
     }
 }
