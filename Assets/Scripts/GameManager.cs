@@ -22,9 +22,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (60 < frameNum++)
+        if (50 < frameNum++) // 50フレームに1回、値を送出する。
         {
-            serialManager.Write("a");
+            string message = UnityEngine.Random.Range(0, 1 + 1) == 0 ? "a" : "b";
+            serialManager.Write(message);
             frameNum = 0;
         }
 

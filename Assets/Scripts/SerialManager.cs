@@ -96,36 +96,18 @@ public class SerialManager : SingletonMonoBehaviour<SerialManager>
             // 前回のnextSendMessageに応じて適当な値を返してあげる
             if (nextSendMessage.Equals("a"))
             {
-                Debug.Log("x");
-                progress = 0.2f;
+                progress = 0.1f;
                 isNewProgress = true;
                 nextSendMessage = "";
             }
             else if (nextSendMessage.Equals("b"))
             {
-                progress = 0.8f;
+                progress = 0.2f;
                 isNewProgress = true;
                 nextSendMessage = "";
             }
-        }
-
-        while (isRunning_ && serialPort_ != null && serialPort_.IsOpen)
-        {
-            if (isDebugMode)
-            {
-                // 前回のnextSendMessageに応じて適当な値を返してあげる
-                if (nextSendMessage.Equals("a"))
-                {
-                    progress = 0.2f;
-                    isNewProgress = true;
-                }
-                else if(nextSendMessage.Equals("b"))
-                {
-                    progress = 0.8f;
-                    isNewProgress = true;
-                }
-            }
-            else
+        } else {
+            while (isRunning_ && serialPort_ != null && serialPort_.IsOpen)
             {
                 try
                 {
